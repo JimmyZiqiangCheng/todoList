@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import EditTodo from "./EditTodo";
 
-const LOCAL_HOST = "http://localhost:5000/todos/"
+const LOCAL_HOST = "http://localhost:5000/"
 const ListTodo = () => {
 
     const [todos, setTodos] = useState([]);
 
     const getTodos = async () => {
         try {
-            const response = await fetch(LOCAL_HOST);
-            const jsonData = await response.json();
-            
+            const response = await fetch(`${LOCAL_HOST}/todos`);
+            const jsonData = await response.json();            
             setTodos(jsonData)
         } catch (err) {
             console.error(err.message);
@@ -24,7 +23,7 @@ const ListTodo = () => {
 
     const deleteTodo = async id => {
         try {
-            const deleteTodo = await fetch(`${LOCAL_HOST}${id}`, {
+            const deleteTodo = await fetch(`${LOCAL_HOST}/todos/${id}`, {
                 method: "DELETE"
             });
 
