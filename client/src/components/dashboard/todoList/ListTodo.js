@@ -2,32 +2,31 @@ import React, { useEffect, useState } from "react";
 
 import EditTodo from "./EditTodo";
 
-const LOCAL_HOST = "http://localhost:5000/"
-const ListTodo = () => {
-
+const LOCAL_HOST = "http://localhost:5000/dashboard"
+const ListTodo = ({allTodos, setTodosChange}) => {
     const [todos, setTodos] = useState([]);
-
-    const getTodos = async () => {
-        try {
-            const response = await fetch(`${LOCAL_HOST}/todos`);
-            const jsonData = await response.json();            
-            setTodos(jsonData)
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
+    // const getTodos = async () => {
+    //     try {
+    //         const response = await fetch(`${LOCAL_HOST}`);
+    //         const jsonData = await response.json();  
+    //         console.log(jsonData);          
+    //         setTodos(jsonData)
+    //     } catch (err) {
+    //         console.error(err.message);
+    //     }
+    // }
 
     useEffect(() => {
-        getTodos();
-    }, []); // [] means only to do it once on mount
+        setTodos(allTodos)
+    }, [allTodos]); // [] means only to do it once on mount
 
     const deleteTodo = async id => {
         try {
-            const deleteTodo = await fetch(`${LOCAL_HOST}/todos/${id}`, {
-                method: "DELETE"
+            await fetch(`${LOCAL_HOST}/todos/${id}`, {
+                method: "DELETE",
+                headers: {token: localStorage.getItem("token")}
             });
-
-            //window.location = "/"
+            setTodosChange(true);
             setTodos(todos.filter(todo => todo.todo_id !== id));
         } catch (err) {
             console.error(err.message);
@@ -45,11 +44,11 @@ const ListTodo = () => {
                 </tr>
                 </thead>
                 <tbody>
-                    {todos.map(todo => (
+                    {todos.length !== 0 && todos[0].todo_id !== null && todos.map(todo => (
                         <tr key = {todo.todo_id}> 
                             <td>{todo.content}</td>
                             <td>
-                                <EditTodo todo = {todo}/>
+                                <EditTodo todo = {todo} setTodosChange={setTodosChange}/>
                             </td>
                             <td>
                                 <button 

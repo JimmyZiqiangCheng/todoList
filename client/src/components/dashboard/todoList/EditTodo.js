@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-const LOCAL_HOST = "http://localhost:5000/todos/"
-const EditTodo = ({todo}) => {
+const LOCAL_HOST = "http://localhost:5000/dashboard/todos/"
+const EditTodo = ({todo,setTodosChange}) => {
     const [content, setContent] = useState(todo.content);
 
     const handleSetContent = event => {
@@ -12,13 +12,16 @@ const EditTodo = ({todo}) => {
         event.preventDefault();
         try {
             const body = {content};
-            const editTodo = await fetch(`${LOCAL_HOST}${id}`, {
-                headers: { "Content-Type": "application/json" },
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("token", localStorage.getItem("token"));
+            await fetch(`${LOCAL_HOST}${id}`, {
+                headers: myHeaders,
                 method: "put",
                 body: JSON.stringify(body)
             });
-
-            window.location = "/";
+            setContent(content);
+            setTodosChange(true);
         } catch (err) {
             console.error(err.message);
         }
