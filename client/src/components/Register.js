@@ -36,6 +36,7 @@ const Register = ({setAuth}) => {
                     hideProgressBar: true,
                 });
             }else{
+                setAuth(false);
                 toast.error(parseRes,{
                     position: toast.POSITION.BOTTOM_CENTER,
                     autoClose: 1000,
@@ -47,7 +48,6 @@ const Register = ({setAuth}) => {
         }
     };
 
-    console.log()
     return (
         <>
             <h1
